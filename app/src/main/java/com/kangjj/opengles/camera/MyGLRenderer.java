@@ -66,7 +66,7 @@ class MyGLRenderer implements GLSurfaceView.Renderer {
     }
 
     /**
-     * 有可用数据时回调
+     * 有可用数据时回调 按需加载！
      */
     private SurfaceTexture.OnFrameAvailableListener mOnFrameAvailableListener = new SurfaceTexture.OnFrameAvailableListener(){
         @Override
