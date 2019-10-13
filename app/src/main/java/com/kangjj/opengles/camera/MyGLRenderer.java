@@ -6,6 +6,7 @@ import android.hardware.Camera;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 
+import com.kangjj.opengles.camera.filters.ScreenFilter;
 import com.kangjj.opengles.camera.utils.CameraHelper;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -20,6 +21,7 @@ class MyGLRenderer implements GLSurfaceView.Renderer {
     private CameraHelper mCameraHelper;
     private int[] mTextureID;
     private SurfaceTexture mSurfaceTexture;
+    private ScreenFilter mScreenFilter;
 
     public MyGLRenderer(MyGLSurfaceView mGLSurfaceView) {
         this.mGLSurfaceView = mGLSurfaceView;
@@ -39,13 +41,15 @@ class MyGLRenderer implements GLSurfaceView.Renderer {
         GLES20.glGenTextures(mTextureID.length,mTextureID,0);
         mSurfaceTexture = new SurfaceTexture(mTextureID[0]);
         mSurfaceTexture.setOnFrameAvailableListener(mOnFrameAvailableListener);
-        //TODO filter  new ScreenFilter
+
+        mScreenFilter = new ScreenFilter(mGLSurfaceView.getContext());
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         mCameraHelper.startPreview(mSurfaceTexture);
-        //TODO filter onReady
+
+        mScreenFilter.onReady(width,height);
     }
 
     @Override
@@ -61,8 +65,8 @@ class MyGLRenderer implements GLSurfaceView.Renderer {
         mSurfaceTexture.updateTexImage();
         float[] mtx = new float[16];
         mSurfaceTexture.getTransformMatrix(mtx);
-        //TODO filter onDrawFrame
 
+        mScreenFilter.onDrawFrame(mTextureID[0],mtx);
     }
 
     /**
